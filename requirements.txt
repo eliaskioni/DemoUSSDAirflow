@@ -1,0 +1,11 @@
+django==1.10.5
+gunicorn==19.6.0
+djangorestframework
+psycopg2==2.6.2
+codacy-coverage==1.2.18
+PyStaticConfiguration
+structlog
+jinja2>=2.8
+dj-database-url==0.4.1
+ussd_airflow==0.0.2.4
+

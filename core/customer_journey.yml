@@ -1,0 +1,93 @@
+initial_screen: welcome_screen
+
+welcome_screen:
+  type: menu_screen
+  text: ""
+  error_message:
+    en: |
+       You have selected invalid option try again.
+    fr: |
+      Vous avez sélectionné l'option non valide réessayer.
+    default: en
+  options:
+      - text:
+          en: |
+            My account
+          fr: |
+            L’assurance gratuite
+          default: en
+        next_screen: MyAccount
+      - text:
+           en: |
+             Internet Services
+           fr: |
+             Acheter l’assurance
+           default: en
+        next_screen: InternetServices
+      - text:
+            en: |
+              Products & Services
+            fr: |
+              Mon status
+            default: en
+        next_screen: ProductAndServices
+      - text:
+            en: |
+              MPESA
+            fr: |
+              Services client
+            default: en
+        next_screen: MPESA
+
+MyAccount:
+  type: menu_screen
+  text: You have airtime balance of KES. 100.
+  options:
+     - text: Enter 1 to buy more airtime
+       next_screen: QuitScreen
+
+QuitMyAccount:
+  type: menu_screen
+  text: ""
+  options:
+    - text: 10
+      next_screen: QuitScreen
+    - text: 100
+      next_screen: QuitScreen
+
+QuitScreen:
+  type: quit_screen
+  text: Request to buy airtime was successful.
+
+InternetServices:
+  type: quit_screen
+  text: 4G network has been rolled out Upgrade your phone to enjoy.
+
+ProductAndServices:
+  type: menu_screen
+  text: ""
+  options:
+    - text: Internet
+      next_screen: InternetServices
+    - text: MPESA Services
+      next_screen: MPESA
+
+MPESA:
+  type: menu_screen
+  text: ""
+  options:
+    - text: Send Money
+      next_screen: QuitMpesa
+    - text: Withdraw Cash
+      next_screen: QuitMpesa
+    - text: Lipa na M-PESA
+      next_screen: QuitMpesa
+
+QuitMpesa:
+  type: quit_screen
+  text: Not yet implemented.
+
+
+
+
+

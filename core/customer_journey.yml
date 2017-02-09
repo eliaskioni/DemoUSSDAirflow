@@ -191,7 +191,10 @@ AirflowContributors:
   type: quit_screen
   text:
     en: |
-      Cancelled
+      List of contributors:
+      {% for i in airflow_contributors.content %}
+      {{i.login}}
+      {% endfor %}
 
 AirflowLatestRelease:
   type: quit_screen

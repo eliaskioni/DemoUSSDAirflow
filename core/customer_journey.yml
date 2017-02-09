@@ -1,93 +1,212 @@
-initial_screen: welcome_screen
+initial_screen:
+    type: initial_screen
+    next_screen: welcome_screen
+    variables:
+        file: ./core/variables/{{environment|default("base")}}.yml
+        namespace: inclusive_variables
+
 
 welcome_screen:
   type: menu_screen
-  text: ""
-  error_message:
+  text:
     en: |
-       You have selected invalid option try again.
-    fr: |
-      Vous avez sélectionné l'option non valide réessayer.
-    default: en
+       Welcome to Ussd Airflow Demo. Ussd Airflow aim is to cater for easy creations of Ussd Menus.
+       In this demo, I will how each demo works. For the HttpScreen. I will use github public api to fetch Ussd Airflow
+       data such a number of contributors, number of Pull Requests pending. In each screen I will end by stating which type of screen this.
+       For example. This is a menu screen
   options:
-      - text:
-          en: |
-            My account
-          fr: |
-            L’assurance gratuite
-          default: en
-        next_screen: MyAccount
-      - text:
-           en: |
-             Internet Services
-           fr: |
-             Acheter l’assurance
-           default: en
-        next_screen: InternetServices
-      - text:
-            en: |
-              Products & Services
-            fr: |
-              Mon status
-            default: en
-        next_screen: ProductAndServices
-      - text:
-            en: |
-              MPESA
-            fr: |
-              Services client
-            default: en
-        next_screen: MPESA
+    - text:
+       en: |
+         Start Demo
+      next_screen: Screens
+    - text:
+       en: |
+         Do it sometime later.
+      next_screen: DoTheDemoLater
 
-MyAccount:
-  type: menu_screen
-  text: You have airtime balance of KES. 100.
-  options:
-     - text: Enter 1 to buy more airtime
-       next_screen: QuitScreen
-
-QuitMyAccount:
-  type: menu_screen
-  text: ""
-  options:
-    - text: 10
-      next_screen: QuitScreen
-    - text: 100
-      next_screen: QuitScreen
-
-QuitScreen:
+DoTheDemoLater:
   type: quit_screen
-  text: Request to buy airtime was successful.
+  text:
+    en: |
+      You have choosen to the demo later.
 
-InternetServices:
-  type: quit_screen
-  text: 4G network has been rolled out Upgrade your phone to enjoy.
+      This is a quit. It purpose is to end / terminate a customer session.
 
-ProductAndServices:
+Screens:
   type: menu_screen
-  text: ""
+  text:
+    en: |
+       Below is a list of screens supported by Ussd Airflow. Select a screen to Demo.
   options:
-    - text: Internet
-      next_screen: InternetServices
-    - text: MPESA Services
-      next_screen: MPESA
+    - text:
+       en: |
+         Http Screen
+      next_screen: HttpScreen
+    - text:
+       en: |
+         Input Screen
+      next_screen: InputScreen
+    - text:
+       en: |
+         Router Screen
+      next_screen: PreRouterScreen
+    - text:
+       en: |
+         Quit Screen
+      next_screen: QuitScreenAIrflow
 
-MPESA:
-  type: menu_screen
-  text: ""
-  options:
-    - text: Send Money
-      next_screen: QuitMpesa
-    - text: Withdraw Cash
-      next_screen: QuitMpesa
-    - text: Lipa na M-PESA
-      next_screen: QuitMpesa
-
-QuitMpesa:
+QuitScreenAIrflow:
   type: quit_screen
-  text: Not yet implemented.
+  text:
+    en: |
+      This is the simplest screen to create. Am quiting here because this is a quit screen.
 
+      This is a quit screen
 
+PreRouterScreen:
+  type: menu_screen
+  text:
+    en: |
+       A router screen works by evaluating if an expression evaluates to True. If True, the screen you want to show while a condition is True is shown.
+       If false, whichever screen your menus logic dictates is show.
+       In this demo. If your phone number is Kenyan. A screen with Swahili words will be displayed else a screen with English text will be shown.
 
+  options:
+    - text:
+       en: |
+         Continue
+      next_screen: RouterScreen
 
+RouterScreen:
+  type: router_screen
+  default_next_screen: NotKenyanNumber
+  router_options:
+    - expression: "{{phone_number.startswith('+254') == True}}"
+      next_screen: KenyanNumber
+    - expression: "{{phone_number.startswith('254') == True}}"
+      next_screen: KenyanNumber
 
+KenyanNumber:
+  type: quit_screen
+  text:
+    en: |
+      Habari gani?
+
+      This is a quit screen
+NotKenyanNumber:
+  type: quit_screen
+  text:
+    en: |
+      Not a kenyan phone number
+
+      This is a quit screen
+
+InputScreen:
+  type: input_screen
+  text:
+    en: |
+      Input your name to view in the next screen.
+
+      This is an input screen. Works by taking a users input and storing in the session.
+  next_screen: QuitInputScreen
+  input_identifier: user_name
+  validators:
+    - regex: "[A-Za-z0-9]"
+      text:
+        en: |
+         Input your name to view in the next screen.
+
+QuitInputScreen:
+  type: quit_screen
+  text:
+    en: |
+      You entered {{user_name}} as your name.
+
+      This is an end screen. It will end this session.
+
+HttpScreen:
+  type: menu_screen
+  text:
+    en: |
+      A HTTP screen aim is to make http calls to external source to collect data or post data eg get a user's balance or in the case a user is opting into your service.
+  options:
+    - text:
+       en: |
+         Ussd Airflow Contributors
+      next_screen: HttpGetAirflowContributors
+    - text:
+       en: |
+         Ussd Airflow latest release
+      next_screen: HttpGetAirflowLatestRelease
+    - text:
+       en: |
+         Ussd Airflow Pending PR.
+      next_screen: HttpGetAirflowPullRequests
+    - text:
+       en: |
+         Issues raised on Ussd Airflow
+      next_screen: HttpGetAirflowIssuesRaised
+
+HttpGetAirflowContributors:
+  type: http_screen
+  http_request:
+    method: get
+    url:  "{{github_url}}contributors"
+    headers:
+      content-type: application/json
+  session_key: airflow_contributors
+  next_screen: AirflowContributors
+
+HttpGetAirflowLatestRelease:
+  type: http_screen
+  http_request:
+    method: get
+    url:  "{{github_url}}/releases"
+    headers:
+      content-type: application/json
+  session_key: latest_release
+  next_screen: AirflowLatestRelease
+
+HttpGetAirflowPullRequests:
+  type: http_screen
+  http_request:
+    method: get
+    url:  "{{github_url}}/pulls"
+    headers:
+      content-type: application/json
+  session_key: pull_requests
+  next_screen: AirflowPullRequests
+
+HttpGetAirflowIssuesRaised:
+  type: http_screen
+  http_request:
+    method: get
+    url:  "{{github_url}}/issues"
+    headers:
+      content-type: application/json
+  session_key: issues_raised
+  next_screen: AirflowIssuesRaised
+
+AirflowContributors:
+  type: quit_screen
+  text:
+    en: |
+      Cancelled
+
+AirflowLatestRelease:
+  type: quit_screen
+  text:
+    en: |
+      Cancelled
+
+AirflowPullRequests:
+  type: quit_screen
+  text:
+    en: |
+      Cancelled
+
+AirflowIssuesRaised:
+  type: quit_screen
+  text:
+    en: |
+      Cancelled

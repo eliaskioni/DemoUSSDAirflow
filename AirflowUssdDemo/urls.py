@@ -22,5 +22,5 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^demo_airflow_gateway',
         DemoAirflowUssdGateway.as_view(),
-        name='africastalking_url')
+        name='demo_airflow')
 ]

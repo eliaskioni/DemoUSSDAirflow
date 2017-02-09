@@ -7,7 +7,7 @@ from core import path
 
 
 class DemoAirflowUssdGateway(UssdView):
-    customer_journey_namespace = "AfricasTalkingUssdGateway"
+    customer_journey_namespace = "DemoUssdGateway"
     customer_journey_conf = path + "/customer_journey.yml"
 
     @staticmethod
@@ -24,6 +24,14 @@ class DemoAirflowUssdGateway(UssdView):
         )
 
         return ussd_request
+
+    def get(self, req):
+        return UssdRequest(
+            req.GET['msisdn'],
+            req.GET['session_id'],
+            req.GET['input'],
+            language=req.data.get('language', 'en')
+        )
 
     @staticmethod
     def ussd_response_handler(ussd_response):

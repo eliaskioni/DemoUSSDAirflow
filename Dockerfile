@@ -3,7 +3,7 @@
 # This will reduce the time needed to create
 # installing al packages
 # to build image from scratch  use this base image FROM python:3.5
-FROM tumacredo/inclusivity-ussd:latest
+FROM python:3.5
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 

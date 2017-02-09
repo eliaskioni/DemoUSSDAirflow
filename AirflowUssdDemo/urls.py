@@ -17,10 +17,14 @@ from django.conf.urls import url
 from django.contrib import admin
 
 from core.views import DemoAirflowUssdGateway
+from core.WithOutFramework import DemoUssdWithoutUssdAirflow
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^demo_airflow_gateway',
         DemoAirflowUssdGateway.as_view(),
-        name='demo_airflow')
+        name='demo_airflow'),
+    url(r'^demo_without_airflow_gateway',
+        DemoUssdWithoutUssdAirflow.as_view()
+        )
 ]
